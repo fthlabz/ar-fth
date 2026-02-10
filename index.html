@@ -1,55 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bunkervan AR Player</title>
-    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-</head>
-
-<body style="margin : 0px; overflow: hidden;">
-
-    <script>
-        // SAYFA YÜKLENDİĞİNDE ÇALIŞACAK ZEKİ KOD
-        AFRAME.registerComponent('loader', {
-            init: function () {
-                // 1. Linkteki parametreleri oku (örn: ?model=hali.glb&scale=1)
-                const params = new URLSearchParams(window.location.search);
-                const modelUrl = params.get('model');
-                const scale = params.get('scale') || "1 1 1"; // Ölçek girilmezse 1 kabul et
-                
-                // 2. Eğer linkte model varsa, sahneye ekle
-                if (modelUrl) {
-                    const entity = document.querySelector('#ar-model');
-                    
-                    // Modeli yükle
-                    entity.setAttribute('gltf-model', modelUrl);
-                    
-                    // Ölçeği ayarla (Senin 30x40 kağıdına göre)
-                    // Not: String olarak "3 3 3" formatında gelmeli
-                    entity.setAttribute('scale', scale);
-                    
-                    console.log("Model Yüklendi: " + modelUrl);
-                } else {
-                    alert("Lütfen linke bir model ekleyin! Örn: ?model=dosya.glb");
-                }
-            }
-        });
-    </script>
-
-    <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;'>
+    <title>Bunkervan Sanal Keşif</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; display: flex; flex-direction: column; align-items: center; height: 100vh; }
         
-        <a-marker type="pattern" url="marker.patt">
-            
-            <a-entity 
-                id="ar-model" 
-                loader 
-                position="0 0 0" 
-                rotation="-90 0 0"> </a-entity>
+        /* 3D Ürünün Döndüğü Kutu */
+        model-viewer { width: 100%; height: 65vh; background-color: #ffffff; }
+        
+        /* Ürün Bilgi Alanı */
+        .product-info { padding: 25px; text-align: center; background: white; width: 100%; box-sizing: border-box; border-top: 1px solid #eaeaea; flex-grow: 1; border-radius: 20px 20px 0 0; margin-top: -15px; z-index: 10; position: relative; box-shadow: 0 -4px 10px rgba(0,0,0,0.05);}
+        
+        h2 { margin: 0 0 10px 0; color: #333; }
+        p { color: #666; margin: 5px 0 15px 0; font-size: 15px;}
+        
+        /* Sihirli AR Butonu */
+        .ar-button { background-color: #1a1a1a; color: #fff; border: none; padding: 16px 32px; font-size: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); width: 80%; transition: background 0.3s; }
+        .ar-button:active { background-color: #444; }
+    </style>
+</head>
+<body>
 
-        </a-marker>
+    <model-viewer
+        src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/SheenChair/glTF-Binary/SheenChair.glb"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        camera-controls
+        shadow-intensity="1.5"
+        auto-rotate>
+        
+        <button slot="ar-button" class="ar-button">
+            Evimde Gör (Kamerayı Aç)
+        </button>
+    </model-viewer>
 
-        <a-entity camera></a-entity>
-    </a-scene>
+    <div class="product-info">
+        <h2>Premium L Koltuk</h2>
+        <p>Boyutlar: 240x160 cm | Kumaş: Leke Tutmaz Keten</p>
+        <p style="font-size: 13px; color: #999;">3D modeli parmağınızla çevirebilir veya evinizde görmek için butona tıklayabilirsiniz.</p>
+    </div>
+
 </body>
 </html>
