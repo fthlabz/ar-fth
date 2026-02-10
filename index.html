@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bunkervan AR Player</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+</head>
+
+<body style="margin : 0px; overflow: hidden;">
+
+    <script>
+        // SAYFA YÜKLENDİĞİNDE ÇALIŞACAK ZEKİ KOD
+        AFRAME.registerComponent('loader', {
+            init: function () {
+                // 1. Linkteki parametreleri oku (örn: ?model=hali.glb&scale=1)
+                const params = new URLSearchParams(window.location.search);
+                const modelUrl = params.get('model');
+                const scale = params.get('scale') || "1 1 1"; // Ölçek girilmezse 1 kabul et
+                
+                // 2. Eğer linkte model varsa, sahneye ekle
+                if (modelUrl) {
+                    const entity = document.querySelector('#ar-model');
+                    
+                    // Modeli yükle
+                    entity.setAttribute('gltf-model', modelUrl);
+                    
+                    // Ölçeği ayarla (Senin 30x40 kağıdına göre)
+                    // Not: String olarak "3 3 3" formatında gelmeli
+                    entity.setAttribute('scale', scale);
+                    
+                    console.log("Model Yüklendi: " + modelUrl);
+                } else {
+                    alert("Lütfen linke bir model ekleyin! Örn: ?model=dosya.glb");
+                }
+            }
+        });
+    </script>
+
+    <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;'>
+        
+        <a-marker type="pattern" url="marker.patt">
+            
+            <a-entity 
+                id="ar-model" 
+                loader 
+                position="0 0 0" 
+                rotation="-90 0 0"> </a-entity>
+
+        </a-marker>
+
+        <a-entity camera></a-entity>
+    </a-scene>
+</body>
+</html>
